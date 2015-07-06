@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html class="no-js" lang="en">
+	<head>
+    <meta charset="UTF-8"> 
+    <title>cut the mustard</title>
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    
+    <script src="js/boomerang.js" type="text/javascript"></script>    
+    <script src="js/plugins/bw.js" type="text/javascript"></script>
+    
+    <script src="js/modernizr_custom.js" type="text/javascript"></script>
+    <script src="js/mod_test_major.js" type="text/javascript"></script>
+    <script src="js/mod_test_minor.js" type="text/javascript"></script>
+    <script src="js/mod_tests.js" type="text/javascript"></script> 
+    
+    <style type="text/css">
+    body {
+      font-size: 12px;
+    }
+    .consoleOutput {
+      color: #00ff00; 
+      font-family: monospace;
+    }
+    </style>       
+  </head>
+  
+  <body onload="initState()">
+
+    <h2><strong>Modernizr Test Harness</strong></h2>
+    <p>
+    <em>some browsers will return NO instead of null, or will spoof support...</em>
+    <br />
+    the intention is to test for common elements used in current templates. 
+    <br />
+    some tests are not properly implemented, unreliable, or may be limited due to localhost. 
+    <br /><br />
+    <button onclick="getDebugOutput();"> debug </button> <button onclick="clearDebugOutput();"> clear </button>
+    <!--
+
+    THIRD, TOP DIV, CONSOLE
+
+    --> 
+    <div style="background-color:#000000; color: #ffffff; width: 50%; float: left; border: 1px solid black; padding: 12px;">
+    Modernizr custom mod version: <span class="consoleOutput" id="modver">
+    is...</span>
+    <br />
+    User agent reported: <span class="consoleOutput" id="usera">
+    is...</span>
+    <br />
+    Boomerang test: <br />
+    <span class="consoleOutput" id="boomer_status">
+    idle</span>
+    <br />
+    Modernizr test: <br />
+    <span class="consoleOutput" id="modernizr_status">
+    idle</span>
+    <br />
+    Parse to php: </br />
+    <span class="consoleOutput" id="php_parse">
+    idle</span>
+    </div>  
+<!--
+
+FIRST, LEFT DIV
+
+-->
+<div style="clear:both"></div> 
+ 
+<div style="width: 25%; float: left; border: 1px solid black; padding: 12px;">
+  <strong>Major Functional features:</strong>
+  <br /><br />
+  <span id="scriptasync">scriptasync...</span>
+  <br />
+  <span id="scriptdefer">scriptdefer...</span>
+  <br />
+  <span id="unicode">unicode...</span>
+  <br />
+  <span id="applicationcache">applicationcache...</span>
+  <br />
+  <span id="history">history...</span>
+  <br />
+  <span id="sessionstorage">sessionstorage...</span>
+  <br />
+  <span id="localstorage">localstorage...</span>
+  <br />
+  <span id="canvas">canvas...</span>
+  <br />
+  <span id="ie8compat">ie8compat...</span>
+  <br />
+  <span id="touch">touch...</span>
+  <br />
+  <span id="json">json...</span>
+  <br />
+  <span id="cookies">cookies...</span>
+  <br />
+  <span id="webgl">webgl...</span>
+  <br /><br />
+  <span id="video">video...</span>
+  <br />
+  <em>codecs</em> -<br />
+  <span id="videoOgg">ogg...</span>
+  <br />
+  <span id="videoH264">h264...</span>
+  <br />
+  <span id="videoWebm">webM...</span>
+  <br /><br />
+  <span id="audio">audio...</span>
+  <br />
+  <em>codecs</em> -<br />
+  <span id="audioOgg">ogg...</span>
+  <br /> 
+  <span id="audioMp3">mp3...</span>
+  <br />
+  <span id="audioWav">wav...</span>
+  <br />
+  <span id="audioM4a">m4a...</span>
+  <br />   
+  </p>
+</div>
+<!--
+
+SECOND, MIDDLE DIV
+
+--> 
+<div style="width: 25%; float:left; border: 1px solid black; padding: 12px;">
+  <strong>Minor and CSS features:</strong>
+  <br /><br />
+  <span id="fontFace">fontface...</span>
+  <br />
+  <span id="backgroundSize">background size...</span>
+  <br />
+  <span id="borderRadius">border radius...</span>
+  <br /> 
+  <span id="boxShadow">box shadow...</span>
+  <br />
+  <span id="opacity">opacity...</span>
+  <br />  
+  <span id="rgba">rgba...</span>
+  <br /> 
+  <span id="mqAll">media query all...</span>
+  <br />
+  <span id="generatedContent">generated content(:before/:after)...</span>
+  <br />
+  <span id="cssGradients">css gradients...</span>
+  <br /><br /> 
+  <span id="dragDrop">drag and drop...</span>
+  <br />
+  <span id="formValidation">form validation...</span>
+  <br /> 
+  <span id="inputAutofocus">input autofocus...</span> 
+  <br />
+  <span id="inputPlaceholder">input placeholder...</span> 
+  <br />
+  <span id="inputRequired">input required...</span> 
+  <br />
+  <span id="deviceOrientation">device orientation...</span> 
+  <br /><br />
+  <span id="ruby">ruby...</span> 
+  <br /> 
+  <span id="lastChild">last-child...</span> 
+  <br /> 
+  <span id="cors">cross-origin-resource...</span> 
+  <br />
+  <span id="aDownload">a download...</span> 
+  <br /> 
+  <span id="webWorkers">web workers...</span> 
+  <br />
+  <span id="supports">@supports...</span> 
+  <br />
+  <span id="iframeSrcdoc">iframe srcdoc...</span> 
+  <br />
+  <span id="lowBandwidth">low bandwidth...</span> 
+  <br />
+  <span id="performance">performance...</span> 
+  <br />
+  <span id="xhr2">XMLHttpRequest level 2...</span> 
+  <br />  
+</div>
+    <!--
+
+    FOURTH, END DIV
+    php debug window
+
+    -->
+    <div style="float: left; background-color:#000000; color: #ffffff; width: 40%; border: 1px solid red; padding: 12px;">
+
+    php debug: <br />
+    <span class="consoleOutput" id="php_debug">
+    is...</span>
+
+    </div>
+
+
+<!--
+test the boomer_call at page bottom
+--> 
+  
+  <!--
+  <script type="text/javascript">
+    document.getElementById('boomer_status').innerHTML = "running";
+  </script> 
+  <script src="js/boomer_call.js" type="text/javascript"></script>
+  -->
+  <script type="text/javascript">
+    document.getElementById('boomer_status').innerHTML = "disabled";
+  </script> 
+  </body>
+</html>    
