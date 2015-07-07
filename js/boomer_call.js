@@ -11,10 +11,10 @@
 // simple
 //
 BOOMR.init({
-  beacon_url: "http://127.0.0.1/test/mustard/stop.html",
-  site_domain: "http://127.0.0.1/",
+  beacon_url: "http://192.168.56.1/test/mustard/stop.html", 
+  site_domain: "http://192.168.56.1/",
     BW: {
-      base_url: "http://127.0.0.1/test/mustard/images/",
+      base_url: "http://192.168.56.1/test/mustard/images/",
       cookie: "BW",
       nruns: 2,
       block_beacon: true
@@ -30,3 +30,34 @@ BOOMR.subscribe('before_beacon', function(o) {
   document.getElementById('boomer_status').innerHTML = html;
   loadTests();
 });
+
+/*
+
+utilities
+
+*/
+var urlCheck = "http://192.168.56.1/test/mustard/images/index.html";
+function urlBoomerChecker() {
+  /*
+  // check if this path is readable
+  urlExists("http://192.168.56.1/test/mustard/images/index.html", function(exists){
+    return exists;
+  });
+  */
+  return urlExists(urlCheck);
+}
+
+function urlExists(url) {//, callback){
+  $.ajax({
+    type: 'HEAD',
+    url: url,
+    success: function(){
+      //callback(true);
+      return true;
+    },
+    error: function() {
+      //callback(false);
+      return false;
+    }
+  });
+}

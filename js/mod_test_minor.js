@@ -8,15 +8,20 @@
 
 */
 //
-// individual tests, simple
+// init array
 //
-var minorArray = [];
-function populateMajorArray() {
+var minorArray = new Array(25);
+function popMinor() {
   // set the array to default false
+  console.log("popMinor called.");
   for (n = 0; n < 25; ++n) {
       minorArray[n] = false;
   }
+  return "OK"
 }
+//
+// individual tests, simple
+//
 function fontface() {
   if (Modernizr.fontface) {
     minorArray[0] = true;

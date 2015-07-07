@@ -14,12 +14,12 @@ $filename = "c:\\Apache24\\htdocs\\php-errors.log";
 function printDebug($stringData) {
   if ($stringData != null) {
     echo "document.getElementById(\"php_debug\").innerHTML = " . $stringData . "\n\r";
-    error_log("Log: " . $stringData, 0);
+    error_log($stringData, 0);
   }
 }
 
 if(isset($_POST['action']) && !empty($_POST['action'])) {
-  printDebug("action posted"); 
+  printDebug("DEBUG: action posted"); 
   $action = $_POST['action'];
   switch($action) {
     case 'result' : 
@@ -32,11 +32,12 @@ if(isset($_POST['action']) && !empty($_POST['action'])) {
 }
 
 function result() {
-  printDebug("posted result");
+  printDebug("DEBUG: posted result");
 }
 
 function storeArray($array) {
-  return true;
+  // TODO
+  return false;
 }
 
 /****************************
@@ -106,7 +107,7 @@ function loadLog() {
 function clearLog() {
 	$handle = fopen(getFilename(), 'w');
   if ($handle === false) {
-    printDebug("ERROR: could not open file.");
+    printDebug("DEBUG: ERROR: could not open file.");
     return 0;
   }
 	fclose($handle);

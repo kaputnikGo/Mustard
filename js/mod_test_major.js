@@ -8,17 +8,20 @@
 
 */
 //
-// individual tests, simple
+// init array
 //
-
-var majorArray = [];
-function populateMajorArray() {
+var majorArray = new Array(22);
+function popMajor() {
   // set the array to default false
+  console.log("popMajor called.");
   for (n = 0; n < 22; ++n) {
       majorArray[n] = false;
   }
+  return "OK"
 }
-
+//
+// individual tests, simple
+//
 function scriptasync() {
   if (Modernizr.scriptasync) {
     majorArray[0] = true;

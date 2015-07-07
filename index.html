@@ -6,13 +6,11 @@
     
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     
-    <script src="js/boomerang.js" type="text/javascript"></script>    
-    <script src="js/plugins/bw.js" type="text/javascript"></script>
-    
-    <script src="js/modernizr_custom.js" type="text/javascript"></script>
+    <script src="js/mod_tests.js" type="text/javascript"></script> 
     <script src="js/mod_test_major.js" type="text/javascript"></script>
     <script src="js/mod_test_minor.js" type="text/javascript"></script>
-    <script src="js/mod_tests.js" type="text/javascript"></script> 
+    
+    <script src="js/modernizr_custom.js" type="text/javascript"></script>
     
     <style type="text/css">
     body {
@@ -21,6 +19,7 @@
     .consoleOutput {
       color: #00ff00; 
       font-family: monospace;
+      font-size: 10px;
     }
     </style>       
   </head>
@@ -56,7 +55,7 @@
     <span class="consoleOutput" id="modernizr_status">
     idle</span>
     <br />
-    Parse to php: </br />
+    js to php: </br />
     <span class="consoleOutput" id="php_parse">
     idle</span>
     </div>  
@@ -194,16 +193,17 @@ SECOND, MIDDLE DIV
 
 <!--
 test the boomer_call at page bottom
---> 
-  
-  <!--
+-->   
+<!--
   <script type="text/javascript">
     document.getElementById('boomer_status').innerHTML = "running";
-  </script> 
+  </script>
+  <script src="js/boomerang.js" type="text/javascript"></script>    
+  <script src="js/plugins/bw.js" type="text/javascript"></script> 
   <script src="js/boomer_call.js" type="text/javascript"></script>
-  -->
+-->
   <script type="text/javascript">
-    document.getElementById('boomer_status').innerHTML = "disabled";
-  </script> 
+  document.getElementById('boomer_status').innerHTML = "disabled";
+  </script>
   </body>
 </html>    

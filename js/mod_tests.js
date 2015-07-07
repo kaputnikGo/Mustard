@@ -15,10 +15,33 @@ function initState() {
   //
   var v = Modernizr._version;
   document.getElementById("modver").innerHTML = v; 
+  //boomerCheck();
+  initTests();
   loadTests();
 }
+function initTests() {
+  console.log('MT: popMajor...');
+  document.getElementById('modernizr_status').innerHTML = "pop major";
+  var resultMaj = popMajor();
+  if (resultMaj === "OK") {
+    console.log("MT: popMajor: OK");
+  }
+  else {
+    console.log('MT: popMajor: ERROR');
+  }
+  //
+  console.log('MT: popMinor...');
+  document.getElementById('modernizr_status').innerHTML = "pop minor";
+  var result = popMinor();
+  if (result === "OK") {
+    console.log("MT: popMinor: OK");
+  }
+  else {
+    console.log('MT: popMinor: ERROR');
+  }
+}
 function loadTests() {
-  console.log("MT: loadTests called.");
+  console.log("MT: loadTests called.");  
   document.getElementById('modernizr_status').innerHTML = "major running";
   runModTestsMajor();
   document.getElementById('modernizr_status').innerHTML = "major complete";
@@ -104,10 +127,11 @@ function getRequest(url, success, error) {
     req.send(null);
     return req;
 }
+/***************************
 
-//
-// call all the tests
-//
+MODERNIZR TEST CALL FUNCTIONS
+
+***************************/
 function runModTestsMajor() {
   document.getElementById("scriptasync").innerHTML = "(uncertain) scriptasync: " + scriptasync();
   document.getElementById("scriptdefer").innerHTML = "(uncertain) scriptdefer: " + scriptdefer();
@@ -132,7 +156,6 @@ function runModTestsMajor() {
   document.getElementById("audioWav").innerHTML = "wav: " + audioWav();  
   document.getElementById("audioM4a").innerHTML = "m4a: " + audioM4a();
 }
-
 function runModTestsMinor() {
   document.getElementById("fontFace").innerHTML = "fontface: " + fontface(); 
   document.getElementById("backgroundSize").innerHTML = "background size: " + backgroundsize(); 
@@ -159,21 +182,52 @@ function runModTestsMinor() {
   document.getElementById("lowBandwidth").innerHTML = "low bandwidth: " + lowBandwidth();
   document.getElementById("performance").innerHTML = "performance: " + performance();
   document.getElementById("xhr2").innerHTML = "XMLHttpRequest level 2: " + xhr2();
-  console.log('MT: postResults...');
-  document.getElementById("php_parse").innerHTML = "postResults...";
-  sendResults();
+  
+  compileResults();
 }
+/***************************
 
+TEST RESULT/PARSE FUNCTIONS
+
+***************************/
+function compileResults() {
+  console.log('MT: compileResults...');
+  document.getElementById("php_parse").innerHTML = "compileResults...";
+  // test with majorArray first
+  if (typeof majorArray !== 'undefined' && majorArray.length > 10) {
+    // the array is defined and has at least 10 elements
+    console.log('MT: majorArray: OK');
+    document.getElementById("php_parse").innerHTML = "majorArray: OK.";
+    // test with minorArray next
+    if (typeof minorArray !== 'undefined' && minorArray.length > 10) {
+      // the array is defined and has at least 10 elements
+      console.log('MT: minorArray: OK');
+      document.getElementById("php_parse").innerHTML = "minorArray: OK.";
+      sendResults();
+    }
+    else {
+      console.log('MT: minorArray: ERROR');
+      document.getElementById("php_parse").innerHTML = "minorArray: ERROR."; 
+    }   
+  }
+  else {
+    console.log('MT: majorArray: ERROR');
+    document.getElementById("php_parse").innerHTML = "majorArray: ERROR."; 
+  } 
+}
 function sendResults() { 
-  document.getElementById("php_parse").innerHTML = "sending major..."; 
-  var jsonArray = JSON.stringify(majorArray);  
+  document.getElementById("php_parse").innerHTML = "sending arrays..."; 
   $.ajax({
-    type: 'post',
-    data: {postArray: jsonArray},
+    type: 'POST',
+    data: {'jsonArrayMaj':JSON.stringify(majorArray), 'jsonArrayMin':JSON.stringify(minorArray)},
     dataType: 'json',
     url: '/test/mustard/js/mod_tests_bridge.php',
+    success: function(data){
+      console.log("post major: OK");
+      $("#php_parse").text("post major: OK");
+    }
   });
-  document.getElementById("php_parse").innerHTML = "post major...";
+  
   postResults();
 }
 function postResults() {
@@ -182,9 +236,27 @@ function postResults() {
   $.ajax({
     url: "/test/mustard/lib/debug.php",
     data: {action: 'result'},
-    type: 'post',
+    type: 'POST',
     success: function(data){
       $("#php_parse").text("ajax post to debug");
     }
   });
 }
+/***************************
+
+DEBUGGER UTILITIES
+
+***************************/
+function boomerCheck() {
+  document.getElementById("php_parse").innerHTML = "boomer check: running";
+  exists = urlBoomerChecker();
+  if (exists) { 
+    console.log("boomerCheck: OK");
+    document.getElementById("php_parse").innerHTML = "boomer_call: url exists.";
+  }
+  else {
+    console.log("boomerCheck: ERROR");
+    document.getElementById("php_parse").innerHTML = "boomer_call: url error.";
+  }
+}
+

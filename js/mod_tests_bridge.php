@@ -3,65 +3,83 @@
     Test Harness:: mod_tests_bridge.php
     get tests results from js
     via POST
-
+    in js folder
     write results to flatfile for testing
+    .make safe.
 
     ------> THIS IS PHP <------
 */
+$root = $_SERVER['DOCUMENT_ROOT'];
+$library = $root.'/test/mustard/lib/';
 
-require('../lib/debug.php');
+require_once($library.'debug.php');
+require_once($library.'listManager.php');
 
-//$majorArray = array[];
-//$arrayFromPost = filter_input(INPUT_POST, 'postArray', FILTER_SANITIZE_STRING);
+$majorArray = array();
+$minorArray = array();
+$arrayData = array();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  printDebug("request method post...");
-  $majorArray = json_decode($_POST["postArray"]);
-  printDebug("parsePostage: call...");
-  parsePostage($majorArray);  
-}
-
-if (storeArray($majorArray)) {
-  printDebug("storeArray: true");
+  printDebug("MTB: json_decode post array data..."); 
   
+  $dataMaj = json_decode(stripslashes($_POST["jsonArrayMaj"]));
+  $dataMin = json_decode(stripslashes($_POST["jsonArrayMin"]));
+  
+  // keeping these values as 0 or 1 allows for ease in collating of stats
+  $i = 0;
+  foreach($dataMaj as $dMaj) {
+    if ($dMaj) 
+      $majorArray[$i] = intval(true);
+    else 
+      $majorArray[$i] = intval(false);
+    $i++;
+  }
+  
+  printDebug("MTB: json_decode post minor..."); 
+  $j = 0;
+  foreach($dataMin as $dMin) {
+    if ($dMin) 
+      $minorArray[$j] = intval(true);
+    else 
+      $minorArray[$j] = intval(false);
+    $j++;
+  }
+  printDebug("MTB: end json_decode post: OK");
+    
+  parseNameValues($majorArray, $minorArray);  
 }
 
-function parsePostage($arrayParse) {
-  //console.log('MTB: parsePostage called.');
-  if (isset($arrayparse)) {
-    $length = $arrayParse.count();
+function parseNameValues($majorArray, $minorArray) {
+  if ($majorArray) {
+    printDebug("MTB: major count: " . count($majorArray));
+  }
+  else 
+    printDebug("MTB: major parse - ERROR");
+  
+  if ($minorArray) { 
+    printDebug("MTB: minor count: " . count($minorArray));
+  }
+  else 
+    printDebug("MTB: minor parse - ERROR");
+  
+  parseNameArrays($majorArray, $minorArray);
+}
+
+function parseNameArrays($majorArray, $minorArray) {
+  popArrayLists();
+  if (getListStatus()) {
+    printDebug("MTB: listStatus: OK");
+    $majorNames = Array();
+    $majorNames = getMajorList();
+    $length = count($majorNames);
     for ($i = 0; $i < $length; $i++) {
-      //echo $arrayParse[$i];
-      printDebug($arrayparse[$i]);
+      printDebug("MTB: " . $majorNames[$i] . ": " . $majorArray[$i]);
     }
+    writeListsToFile($majorArray, $minorArray);
   }
   else {
-    printDebug("parse: ERROR - arrayParse false");
+    printDebug("MTB: listStatus: ERROR");
   }
 }
-
-//$majorArray = [];
-/*
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  console.log('MTB: server request...');
-  $majorArray = $_POST['majorArray']);
-  console.log('MTB: post majorArray.');
-  if ($majorArray.count() >= 1) {
-    console.log('MTB: count >= 1');
-    parsePostage();    
-  }
-  else {
-    // no array found in post
-  }
-}
-
-function parsePostage() {
-  console.log('MTB: parsePostage called.');
-  int length = $majorArray.count();
-  for (int i = 0; i < length; i++) {
-    echo $majorLength[i];
-  }  
-}
-*/
 
 ?>
