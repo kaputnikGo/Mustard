@@ -13,7 +13,6 @@
 var majorArray = new Array(22);
 function popMajor() {
   // set the array to default false
-  console.log("popMajor called.");
   for (n = 0; n < 22; ++n) {
       majorArray[n] = false;
   }

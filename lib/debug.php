@@ -8,18 +8,16 @@
 
     ------> THIS IS PHP <------
 */
-$filename = "c:\\Apache24\\htdocs\\php-errors.log";
-
+const LOG_FILENAME = "c:\\Apache24\\htdocs\\test\\mustard\\lib\\mustard-errors.log";
 
 function printDebug($stringData) {
   if ($stringData != null) {
     echo "document.getElementById(\"php_debug\").innerHTML = " . $stringData . "\n\r";
-    error_log($stringData, 0);
+    error_log($stringData.PHP_EOL, 3, LOG_FILENAME);
   }
 }
 
-if(isset($_POST['action']) && !empty($_POST['action'])) {
-  printDebug("DEBUG: action posted"); 
+if(isset($_POST['action']) && !empty($_POST['action'])) { 
   $action = $_POST['action'];
   switch($action) {
     case 'result' : 
@@ -30,6 +28,15 @@ if(isset($_POST['action']) && !empty($_POST['action'])) {
       break;
   }
 }
+
+if(isset($_POST['debugMessage']) && !empty($_POST['debugMessage'])) {
+  $message = $_POST['debugMessage'];
+  if ($message) {   
+    printDebug("DEBUG: ".$message);
+  }
+  else 
+    printDebug("DEBUG: post message ERROR.");
+}  
 
 function result() {
   printDebug("DEBUG: posted result");
@@ -93,7 +100,7 @@ function readLastLines($lineCount, $skipEmptyLines = false) {
 utilities
 */
 function getFilename() {
-	return "c:\\Apache24\\htdocs\\php-errors.log";
+  return LOG_FILENAME;
 }
 function getFileSize() {
 	return filesize(getFilename());

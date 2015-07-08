@@ -9,6 +9,11 @@
 
 */
 // vars for use with multiple functions on this page
+var LIBRARY = "/test/mustard/lib/";
+var JS_LIBRARY = "/test/mustard/js/";
+// many calls to debug...
+var JS_DEBUG_ON = true;
+
 function initState() {
   var x = navigator.userAgent;
   document.getElementById("usera").innerHTML = x;
@@ -16,32 +21,34 @@ function initState() {
   var v = Modernizr._version;
   document.getElementById("modver").innerHTML = v; 
   //boomerCheck();
+  var h = window.location.hostname;
+  postDebug("MT: hostname: " + h);
   initTests();
   loadTests();
 }
 function initTests() {
-  console.log('MT: popMajor...');
+  postDebug('MT: popMajor...');
   document.getElementById('modernizr_status').innerHTML = "pop major";
   var resultMaj = popMajor();
   if (resultMaj === "OK") {
-    console.log("MT: popMajor: OK");
+    postDebug("MT: popMajor: OK");
   }
   else {
-    console.log('MT: popMajor: ERROR');
+    postDebug("MT: popMajor: ERROR");
   }
   //
-  console.log('MT: popMinor...');
+  postDebug('MT: popMinor...');
   document.getElementById('modernizr_status').innerHTML = "pop minor";
   var result = popMinor();
   if (result === "OK") {
-    console.log("MT: popMinor: OK");
+    postDebug("MT: popMinor: OK");
   }
   else {
-    console.log('MT: popMinor: ERROR');
+    postDebug("MT: popMinor: ERROR");
   }
 }
 function loadTests() {
-  console.log("MT: loadTests called.");  
+  postDebug("MT: loadTests called.");  
   document.getElementById('modernizr_status').innerHTML = "major running";
   runModTestsMajor();
   document.getElementById('modernizr_status').innerHTML = "major complete";
@@ -56,13 +63,11 @@ DEBUGGER TO SCREEN FUNCTIONS
 
 ***************************/
 function clearDebugOutput() {
-  document.getElementById("php_parse").innerHTML = "debug log: clearing...";
-  
   $.ajax({
-    url: "/test/mustard/lib/debug.php",
+    url: LIBRARY + "debug.php",
     data: {action: 'clearLog'},
     type: 'post',
-    success: function(data){
+    success: function(){
       $("#php_parse").text("debug log cleared: OK");
       $("#php_debug").text("log cleared: OK");
     }
@@ -70,9 +75,9 @@ function clearDebugOutput() {
 } 
 function getDebugOutput() {
   getRequest(
-      '/php-errors.log', // URL for the PHP file
-       drawDebugOutput,  // handle successful request
-       drawDebugError    // handle error
+      LIBRARY + 'mustard-errors.log', // URL for the PHP file
+      drawDebugOutput,  // handle successful request
+      drawDebugError    // handle error
   );
   return false;
 }  
@@ -191,56 +196,131 @@ TEST RESULT/PARSE FUNCTIONS
 
 ***************************/
 function compileResults() {
-  console.log('MT: compileResults...');
+  postDebug('MT: compileResults...');
   document.getElementById("php_parse").innerHTML = "compileResults...";
   // test with majorArray first
   if (typeof majorArray !== 'undefined' && majorArray.length > 10) {
     // the array is defined and has at least 10 elements
-    console.log('MT: majorArray: OK');
+    postDebug('MT: majorArray: OK');
     document.getElementById("php_parse").innerHTML = "majorArray: OK.";
     // test with minorArray next
     if (typeof minorArray !== 'undefined' && minorArray.length > 10) {
       // the array is defined and has at least 10 elements
-      console.log('MT: minorArray: OK');
+      postDebug('MT: minorArray: OK');
       document.getElementById("php_parse").innerHTML = "minorArray: OK.";
-      sendResults();
+      preCookieCombine();
     }
     else {
-      console.log('MT: minorArray: ERROR');
+      postDebug('MT: minorArray: ERROR');
       document.getElementById("php_parse").innerHTML = "minorArray: ERROR."; 
     }   
   }
   else {
-    console.log('MT: majorArray: ERROR');
+    postDebug('MT: majorArray: ERROR');
     document.getElementById("php_parse").innerHTML = "majorArray: ERROR."; 
   } 
 }
-function sendResults() { 
-  document.getElementById("php_parse").innerHTML = "sending arrays..."; 
+function preCookieCombine() {
+  // firstly, get this out of the way
+  sendResults();
+  
+  // combine all the strings, arrays into 
+  // a single array for cookiefying.
+  postDebug('MT: preCookie combine...');
+  var uagent = navigator.userAgent;
+  if (typeof uagent === 'undefined' || uagent.length < 1) {
+    uagent = "no user-agent reported";
+  }
+  var combine = majorArray.concat(minorArray);
+  
+  setCookie("MT-test", uagent, combine);
+}
+
+function sendResults() {  
   $.ajax({
     type: 'POST',
-    data: {'jsonArrayMaj':JSON.stringify(majorArray), 'jsonArrayMin':JSON.stringify(minorArray)},
+    data: {'jsonArrayMaj':JSON.stringify(majorArray), 
+            'jsonArrayMin':JSON.stringify(minorArray),
+            'useragent':JSON.stringify(navigator.userAgent)
+          },
     dataType: 'json',
-    url: '/test/mustard/js/mod_tests_bridge.php',
-    success: function(data){
-      console.log("post major: OK");
+    url: JS_LIBRARY + 'mod_tests_bridge.php',
+    success: function(){
+      postDebug("post major: OK");
       $("#php_parse").text("post major: OK");
     }
   });
   
   postResults();
 }
-function postResults() {
-  document.getElementById("php_parse").innerHTML = "post resulted: OK";
-  
+function postResults() {  
   $.ajax({
-    url: "/test/mustard/lib/debug.php",
+    url: LIBRARY + "debug.php",
     data: {action: 'result'},
     type: 'POST',
-    success: function(data){
-      $("#php_parse").text("ajax post to debug");
+    success: function(){
+      $("#php_parse").text("ajax post to php: OK");
+      postDebug("post results: OK");
     }
   });
+}
+function postDebug(debugMessage) {  
+  if (JS_DEBUG_ON === true) {
+    $.ajax({
+      url: LIBRARY + "debug.php",
+      data: {debugMessage: debugMessage},
+      type: 'POST',
+      success: function(){
+        $("#php_parse").text("ajax post to debug: OK");
+      }
+    });
+  }
+}
+function parseCookie() {  
+  $.ajax({
+    url: JS_LIBRARY + "mod_tests_bridge.php",
+    data: 'parseCookie',
+    type: 'POST',
+    success: function(){
+      $("#php_parse").text("ajax post to cookie: OK");
+      postDebug("parseCookie: OK");
+    }
+  });
+}
+/***************************
+
+COOKIE FUNCTIONS
+
+***************************/
+function setCookie(cname, cuagent, carray) {
+    postDebug("MT: setCookie called...");
+    if (typeof carray !== 'undefined' && carray.length > 10) { 
+      /*
+      domain: 'localhost'
+      or: 
+      <?php echo $_SERVER['HTTP_HOST']; ?> 
+      js: 
+      window.location.hostname
+      */
+      Cookies.set(cname, cuagent, carray);
+    }
+    else {
+      postDebug("MT: setCookie undefined array && < 10 : ERROR");
+    }
+    getCookie(cname);
+}
+function getCookie(cname) {
+    postDebug("MT: getCookie called...");
+    var cookiedArray = Cookies.getJSON(cname); 
+    
+    if (typeof cookiedArray !== 'undefined') {      
+      //return cookiedArray;
+      postDebug("MT: cookied[0]: " + cookiedArray[0]);
+      parseCookie();
+    }
+    else {
+      postDebug("MT: getCookie parse cookie array : ERROR");
+    }
 }
 /***************************
 
@@ -251,11 +331,11 @@ function boomerCheck() {
   document.getElementById("php_parse").innerHTML = "boomer check: running";
   exists = urlBoomerChecker();
   if (exists) { 
-    console.log("boomerCheck: OK");
+    postDebug("boomerCheck: OK");
     document.getElementById("php_parse").innerHTML = "boomer_call: url exists.";
   }
   else {
-    console.log("boomerCheck: ERROR");
+    postDebug("boomerCheck: ERROR");
     document.getElementById("php_parse").innerHTML = "boomer_call: url error.";
   }
 }

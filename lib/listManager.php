@@ -71,8 +71,8 @@ function getListStatus() {
   
   if (isset($majorNamesArray)) {
     if (isset($minorNamesArray)) {
-      return true;
       printDebug("LM: listStatus: OK");
+      return true;
     }
   }
   printDebug("LM: listStatus: ERROR");
@@ -88,20 +88,32 @@ function getMinorList() {
   return $minorNamesArray;
 }
 
-function writeListsToFile($majorArray, $minorArray) {
-  // use the global, match answers to names
-  global $majorNamesArray;
+function writeListsToFile($useragent, $majorArray, $minorArray) {
   //$answer_data = serialize($majorArray);
   //$name_data = serialize($majorNamesArray);
+  printDebug("LM: useragent: " . $useragent);
+  printDebug("LM: major lines:" . count($majorArray));
+  printDebug("LM: minor lines:" . count($minorArray));
   
+  /*
+  // test debug printout
+  // use the global, match answers to names
+  global $majorNamesArray;
+  global $minorNamesArray;
+    
   $lines = array();
-  $length = count($majorArray);
-  for ($i = 0; $i < $length; $i++) {
+  for ($i = 0; $i < count($majorArray); $i++) {
     $lines[$i] = $majorNamesArray[$i] . ": " . $majorArray[$i];
     printDebug("LM: " . $lines[$i]);
   }
-  
-  //file_put_contents("your-file.txt", $string_data);
+  $j = count($majorArray);
+  for ($i = 0; $i < count($minorArray); $i++) {
+    $lines[$j] = $minorNamesArray[$i] . ": " . $minorArray[$i];
+    printDebug("LM: " . $lines[$j]);
+    $j++;
+  }
+  */
+  //file_put_contents("your-file.txt", $lines);
 }
 
 ?>

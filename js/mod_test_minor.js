@@ -13,7 +13,6 @@
 var minorArray = new Array(25);
 function popMinor() {
   // set the array to default false
-  console.log("popMinor called.");
   for (n = 0; n < 25; ++n) {
       minorArray[n] = false;
   }

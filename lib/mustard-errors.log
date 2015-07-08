@@ -1,0 +1,32 @@
+DEBUG: MT: popMinor: OK
+DEBUG: MT: loadTests called.
+DEBUG: MT: popMajor: OK
+DEBUG: MT: hostname: 127.0.0.1
+DEBUG: MT: popMajor...
+DEBUG: MT: popMinor...
+DEBUG: MT: compileResults...
+DEBUG: MT: majorArray: OK
+DEBUG: MT: minorArray: OK
+MTB: json_decode post...
+DEBUG: posted result
+MTB: json_decode post: OK
+LM: listStatus: OK
+LM: useragent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101 Firefox/38.0
+DEBUG: MT: preCookie combine...
+LM: major lines:22
+LM: minor lines:25
+DEBUG: MT: getCookie called...
+DEBUG: MT: setCookie called...
+DEBUG: MT: cookied[0]: false
+MTB: json_decode post...
+MTB: json_decode post: OK
+MTB: majorArray empty
+MTB: minorArray empty
+LM: listStatus: OK
+LM: useragent: 
+LM: major lines:0
+LM: minor lines:0
+MTB: parse cookie called.
+Cookie 'MT-test' is set.
+DEBUG: post results: OK
+DEBUG: parseCookie: OK
